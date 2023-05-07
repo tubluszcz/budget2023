@@ -14,6 +14,7 @@ limitations under the License.
 body {
   text-align: justify;
   background: #f2f2ef;
+  webkit-font-smoothing: antialiased;
 }
 
 #maincontainer {

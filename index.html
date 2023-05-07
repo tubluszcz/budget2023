@@ -31,7 +31,7 @@
 		<h1> BUDŻET 2023 </h1>
 		<div id = "viz"></div>
 		<div class="footer">
-			<p>Źródło danych: <a href="https://www.gov.pl/web/finanse/ustawa-2023">Budżet RP 2023</a>. 
+			<p>Źródło danych: <a href="https://www.gov.pl/web/finanse/ustawa-2023">Budżet RP 2023</a>. Agregacja własna.
 		</div>
 	</div>
 
@@ -67,9 +67,11 @@
 	var color = d3.scaleOrdinal().range(d3.quantize(d3.interpolateViridis, data.children.length + 1));
 	var format = d3.format(",d");
 
-	var width = 1200;
-	var height = 800;
-	var radius = 130;
+	var width = 800;
+	var height = 900;
+	var radius = 120;
+	var tooltip_x = '-' + 2*radius*1.5+ 'px';
+	var tooltip_y = '-450px';
 
 	var arc = d3.arc()
 	.startAngle(d => d.x0)
@@ -89,7 +91,7 @@
     .classed("svg-container", true) 
 	.append("svg")
 	.attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 1200 800")
+    .attr("viewBox", "0 0 " + width + " " + height)
 	.classed("svg-content-responsive", true)
 	.attr("width", width)
 	.attr("height", height)
@@ -97,7 +99,7 @@
 	.style("font-weight", 400)
 	.style("font-family", "Roboto")
 	.append("g")
-	.attr("transform", "translate(" + 600 + "," + 400 + ")");
+	.attr("transform", "translate(" + width/2 + "," + height/2 + ")");
 	//.attr("transform", "translate(" + width/2 + "," + height/2 + ")");
 
 	const path = svg
@@ -116,20 +118,20 @@
 		tooltip
 		.style("font-weight", 700)
 		.attr("dy", "2em")
-		.attr('x', '300px')
+		.attr('x', tooltip_x)
 		.html(d.data.name + "<br>")
 		.append("tspan")
 		.style("font-weight", 300)
 		.attr("dy", "1em")
-		.attr('x', '300px')
+		.attr('x', tooltip_x)
 		.html(d.ancestors().slice(start=1,end=-1).map(d => d.data.name).reverse().join("/") + "<br>")
 		.append("tspan")
 		.html("Kwota (tys PLN): " + format(d.value) + "<br>")
 		.attr("dy", "1em")
-		.attr('x', '300px')
+		.attr('x', tooltip_x)
 		.append("tspan")
 		.attr("dy", "1em")
-		.attr('x', '300px')
+		.attr('x', tooltip_x)
 		.html("Udział w budżecie: " + (d.value/root.value*100).toPrecision(3)+"%");})
 	.on("mouseout", function(){
 		d3.select(this).attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0);
@@ -139,8 +141,8 @@
 		.append("text")
 		.attr("class", "tooltip")
 		.style("position", "relative")
-		.attr('x', '300px')
-		.attr('y', '-400px')
+		.attr('x', tooltip_x)
+		.attr('y', tooltip_y)
 		.style("text-anchor", "left")
 		.style("text-align", "left");
 
